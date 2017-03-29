@@ -3,18 +3,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.heroku.agent</groupId>
-  <artifactId>heroku-javaagent</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <artifactId>heroku-java-metrics-agent</artifactId>
+  <version>1.7-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>heroku-javaagent</name>
+  <name>heroku-java-metrics-agent</name>
   <description>An extremely lightweight Java agent that can be used to send memory usage information to your logs.
   </description>
-  <url>https://github.com/heroku/heroku-javaagent</url>
+  <url>https://github.com/heroku/heroku-java-metrics-agent</url>
   <licenses>
     <license>
       <name>MIT</name>
-      <url>https://github.com/heroku/heroku-javaagent/blob/master/LICENSE</url>
+      <url>https://github.com/heroku/heroku-java-metrics-agent/blob/master/LICENSE</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -25,9 +25,9 @@
     </snapshotRepository>
   </distributionManagement>
   <scm>
-    <url>https://github.com/heroku/heroku-javaagent</url>
-    <connection>scm:git:git@github.com:heroku/heroku-javaagent.git</connection>
-    <developerConnection>scm:git:git@github.com:heroku/heroku-javaagent.git</developerConnection>
+    <url>https://github.com/heroku/heroku-java-metrics-agent</url>
+    <connection>scm:git:git@github.com:heroku/heroku-java-metrics-agent.git</connection>
+    <developerConnection>scm:git:git@github.com:heroku/heroku-java-metrics-agent.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   <developers>
@@ -40,15 +40,15 @@
   <mailingLists>
     <mailingList>
       <name>Heroku Java Agent issues</name>
-      <archive>https://github.com/heroku/heroku-javaagent/issues?state=closed</archive>
-      <subscribe>https://github.com/heroku/heroku-javaagent/toggle_watch</subscribe>
-      <unsubscribe>https://github.com/heroku/heroku-javaagent/toggle_watch</unsubscribe>
-      <post>https://github.com/heroku/heroku-javaagent/issues/new</post>
+      <archive>https://github.com/heroku/heroku-java-metrics-agent/issues?state=closed</archive>
+      <subscribe>https://github.com/heroku/heroku-java-metrics-agent/toggle_watch</subscribe>
+      <unsubscribe>https://github.com/heroku/heroku-java-metrics-agent/toggle_watch</unsubscribe>
+      <post>https://github.com/heroku/heroku-java-metrics-agent/issues/new</post>
     </mailingList>
   </mailingLists>
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/heroku/heroku-javaagent/issues/new</url>
+    <url>https://github.com/heroku/heroku-java-metrics-agent/issues/new</url>
   </issueManagement>
 
   <build>
@@ -60,7 +60,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Premain-Class>com.heroku.agent.Agent</Premain-Class>
+              <Premain-Class>com.heroku.agent.MetricsAgent</Premain-Class>
             </manifestEntries>
           </archive>
         </configuration>
@@ -98,7 +98,7 @@
           <appendAssemblyId>false</appendAssemblyId>
           <archive>
             <manifestEntries>
-              <Premain-Class>com.heroku.agent.Agent</Premain-Class>
+              <Premain-Class>com.heroku.agent.MetricsAgent</Premain-Class>
             </manifestEntries>
           </archive>
         </configuration>

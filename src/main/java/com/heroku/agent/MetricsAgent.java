@@ -8,7 +8,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.lang.instrument.Instrumentation;
 
-public class Agent {
+public class MetricsAgent {
 
   public static void premain(String agentArgs, Instrumentation instrumentation) {
     new Thread() {
