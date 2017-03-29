@@ -16,11 +16,11 @@ public class MetricsAgent {
       public void run() {
         try {
           DefaultExports.initialize();
-          Server server = new Server(Integer.valueOf(System.getenv("HEROKU_PROM_METRICS_PORT")));
+          Server server = new Server(Integer.valueOf(System.getenv("HEROKU_METRICS_PROM_PORT")));
           ServletContextHandler context = new ServletContextHandler();
           context.setContextPath("/");
           server.setHandler(context);
-          context.addServlet(new ServletHolder(new MetricsServlet()), System.getenv("HEROKU_PROM_METRICS_ENDPOINT"));
+          context.addServlet(new ServletHolder(new MetricsServlet()), System.getenv("HEROKU_METRICS_PROM_ENDPOINT"));
           server.start();
           server.join();
         } catch (Exception ex) {
