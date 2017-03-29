@@ -5,7 +5,7 @@ set -eu
 
 VERSION="${1}"
 
-mvn versions:set -DnewVersion=
+mvn versions:set -DnewVersion=$VERSION
 
 rm pom.xml.versionsBackup
 
