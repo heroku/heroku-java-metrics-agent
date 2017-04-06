@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>heroku-java-metrics-agent</name>
-  <description>An extremely lightweight Java agent that can be used to send memory usage information to your logs.
+  <description>A lightweight Java agent that exposes a Prometheus Java client.
   </description>
   <url>https://github.com/heroku/heroku-java-metrics-agent</url>
   <licenses>
@@ -39,7 +39,7 @@
   </developers>
   <mailingLists>
     <mailingList>
-      <name>Heroku Java Agent issues</name>
+      <name>Heroku Java Metrics Agent issues</name>
       <archive>https://github.com/heroku/heroku-java-metrics-agent/issues?state=closed</archive>
       <subscribe>https://github.com/heroku/heroku-java-metrics-agent/toggle_watch</subscribe>
       <unsubscribe>https://github.com/heroku/heroku-java-metrics-agent/toggle_watch</unsubscribe>
