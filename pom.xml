@@ -97,6 +97,11 @@
           <finalName>heroku-metrics-agent</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <archive>
+            <index>true</index>
+            <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
             <manifestEntries>
               <Premain-Class>com.heroku.agent.MetricsAgent</Premain-Class>
             </manifestEntries>
