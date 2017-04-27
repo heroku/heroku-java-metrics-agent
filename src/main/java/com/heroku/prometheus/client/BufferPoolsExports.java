@@ -22,7 +22,7 @@ import java.util.List;
  * <pre>
  *   jvm_buffer_pool_bytes_used{name="direct"} 2000000
  *   jvm_buffer_pool_bytes_capacity{name="direct"} 200000
- *   jvm_buffer_pool_count{name="nonheap"} 20
+ *   jvm_buffer_pool_count{name="direct"} 20
  * </pre>
  */
 public class BufferPoolsExports extends Collector {
