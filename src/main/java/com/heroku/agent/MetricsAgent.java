@@ -1,5 +1,6 @@
 package com.heroku.agent;
 
+import com.heroku.prometheus.client.BufferPoolsExports;
 import io.prometheus.client.exporter.MetricsServlet;
 import io.prometheus.client.hotspot.DefaultExports;
 import org.eclipse.jetty.server.Server;
@@ -37,6 +38,8 @@ public class MetricsAgent {
 
     try {
       DefaultExports.initialize();
+      new BufferPoolsExports().register();
+
       Server server = new Server(Integer.valueOf(System.getenv("HEROKU_METRICS_PROM_PORT")));
       ServletContextHandler context = new ServletContextHandler();
       context.setContextPath("/");
