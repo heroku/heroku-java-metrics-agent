@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>heroku-java-metrics-agent</name>
-  <description>A lightweight Java agent that exposes a Prometheus Java client.
+  <description>A lightweight Java agent that uses a Prometheus Java client.
   </description>
   <url>https://github.com/heroku/heroku-java-metrics-agent</url>
   <licenses>
