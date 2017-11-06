@@ -30,7 +30,7 @@
     <url>https://github.com/heroku/heroku-java-metrics-agent</url>
     <connection>scm:git:git@github.com:heroku/heroku-java-metrics-agent.git</connection>
     <developerConnection>scm:git:git@github.com:heroku/heroku-java-metrics-agent.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>heroku-java-metrics-agent-3.0-RC1</tag>
   </scm>
   <developers>
     <developer>
@@ -54,6 +54,7 @@
   </issueManagement>
 
   <build>
+    <finalName>heroku-java-metrics-agent</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
