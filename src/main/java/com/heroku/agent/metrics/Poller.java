@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,8 +28,8 @@ public class Poller {
     this.registry = CollectorRegistry.defaultRegistry;
   }
 
-  public void poll(final Callback callback) throws IOException {
-    scheduler.scheduleAtFixedRate(new Runnable() {
+  public ScheduledFuture<?> poll(final Callback callback) throws IOException {
+    return scheduler.scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
         ObjectMapper mapper = new ObjectMapper();
