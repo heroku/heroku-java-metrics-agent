@@ -32,7 +32,7 @@ public class MetricsAgent {
   }
 
   private static void logError(String message, Throwable t) {
-    System.out.println(" ! ERROR: " + message);
+    System.out.println("error at=java-metrics message=\"" + message + "\"");
 
     String debug = System.getenv("HEROKU_METRICS_DEBUG");
     if ("1".equals(debug) || "true".equals(debug)) {

@@ -64,7 +64,7 @@ public class Reporter {
       }
       in.close();
 
-      System.out.println("upstream service replied with status=" + responseCode + ": " + response);
+      System.out.println("error at=java-metrics message=\"upstream service error\" status=" + responseCode + " response=\"" + response + "\"");
       return false;
     } else if (responseCode >= 200 && responseCode < 300) {
       return true;
