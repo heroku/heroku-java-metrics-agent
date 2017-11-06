@@ -8,7 +8,9 @@
   <packaging>jar</packaging>
 
   <name>heroku-java-metrics-agent</name>
-  <description>A lightweight Java agent that uses a Prometheus Java client.
+  <description>
+    This artifact is for use with the JVM Runtime Metrics features.
+    It is a lightweight Java agent that uses a Prometheus Java client to report metrics.
   </description>
   <url>https://github.com/heroku/heroku-java-metrics-agent</url>
   <licenses>
@@ -56,7 +58,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>3.0.2</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -68,7 +70,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.3</version>
+        <version>1.6.8</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
@@ -79,7 +81,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.5</version>
+        <version>2.5.3</version>
         <configuration>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <useReleaseProfile>false</useReleaseProfile>
@@ -89,7 +91,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.1.0</version>
         <configuration>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -121,9 +123,9 @@
   </build>
 
   <properties>
-    <source.plugin.version>2.1.2</source.plugin.version>
-    <gpg.plugin.version>1.2</gpg.plugin.version>
-    <javadoc.plugin.version>2.7</javadoc.plugin.version>
+    <source.plugin.version>3.0.1</source.plugin.version>
+    <gpg.plugin.version>1.6</gpg.plugin.version>
+    <javadoc.plugin.version>2.10.4</javadoc.plugin.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
