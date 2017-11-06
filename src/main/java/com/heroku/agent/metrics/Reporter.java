@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * @author Joe Kutner on 11/2/17.
@@ -17,6 +18,8 @@ import java.util.Date;
 public class Reporter {
 
   private URL url;
+
+  private static final Integer MAX_RETRIES = 3;
 
   public Reporter() throws MalformedURLException {
     String urlString = System.getenv("HEROKU_METRICS_URL");
@@ -36,6 +39,10 @@ public class Reporter {
   }
 
   private Boolean sendPost(String message) throws IOException {
+    return sendPost(message, 0);
+  }
+
+  private Boolean sendPost(String message, Integer retries) throws IOException {
     HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 
     con.setRequestMethod("POST");
@@ -69,8 +76,12 @@ public class Reporter {
     } else if (responseCode >= 200 && responseCode < 300) {
       return true;
     } else {
-      // todo handle retries
-      return false;
+      if (retries > MAX_RETRIES) {
+        return false;
+      } else {
+        LockSupport.parkNanos(2 * 1000000);
+        return sendPost(message, retries + 1);
+      }
     }
   }
 }
