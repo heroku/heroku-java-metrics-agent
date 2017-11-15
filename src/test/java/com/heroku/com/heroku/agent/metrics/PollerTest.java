@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,10 +52,9 @@ public class PollerTest {
         }
       }
     };
-    ScheduledFuture<?> handle = p.poll(callback);
-
-    assertTrue(latch.await(handle.getDelay(TimeUnit.SECONDS) * 2, TimeUnit.SECONDS));
-    handle.cancel(true);
+    p.poll(callback);
+    assertTrue(latch.await(10, TimeUnit.SECONDS));
+    p.cancel();
 
     if (callback.hasThrowable()) throw callback.throwable;
   }

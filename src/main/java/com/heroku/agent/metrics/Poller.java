@@ -3,10 +3,8 @@ package com.heroku.agent.metrics;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,15 +19,15 @@ public class Poller {
 
   private CollectorRegistry registry;
 
-  private final ScheduledExecutorService scheduler;
+  private final Timer timer;
 
   public Poller() {
-    this.scheduler = Executors.newScheduledThreadPool(1);
+    this.timer = new Timer("heroku-java-metrics-agent",true);
     this.registry = CollectorRegistry.defaultRegistry;
   }
 
-  public ScheduledFuture<?> poll(final Callback callback) throws IOException {
-    return scheduler.scheduleAtFixedRate(new Runnable() {
+  public void poll(final Callback callback) throws IOException {
+    timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
         ObjectMapper mapper = new ObjectMapper();
@@ -54,7 +52,11 @@ public class Poller {
         }
         callback.apply(mapper, metricsJson);
       }
-    }, 5, 5, TimeUnit.SECONDS);
+    }, 5, 5);
+  }
+
+  public void cancel() {
+    this.timer.cancel();
   }
 
   public static abstract class Callback {
