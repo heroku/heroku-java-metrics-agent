@@ -22,21 +22,20 @@ public class MetricsAgent {
           try {
             reporter.report(mapper.writer().writeValueAsString(metricsJson));
           } catch (IOException e) {
-            logError("Failed to report metrics", e);
+            logError("report-metrics", e);
           }
         }
       });
     } catch (Exception e) {
-      logError("Failed to poll metrics", e);
+      logError("poll-metrics", e);
     }
   }
 
-  private static void logError(String message, Throwable t) {
-    System.out.println("error at=heroku-java-metrics-agent message=\"" + message + "\"");
+  private static void logError(String at, Throwable t) {
+    System.out.println("error at=\"" + at + "\" component=heroku-java-metrics-agent message=\"" + t.getMessage() + "\"");
 
     String debug = System.getenv("HEROKU_METRICS_DEBUG");
     if ("1".equals(debug) || "true".equals(debug)) {
-      System.out.println(t.getMessage());
       t.printStackTrace();
     }
   }
