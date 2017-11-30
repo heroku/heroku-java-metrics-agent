@@ -1,10 +1,8 @@
 package com.heroku.agent.metrics;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,6 +19,8 @@ public class Poller {
 
   private final Timer timer;
 
+  private Map<String, Metric> previousCounters = new ConcurrentHashMap<>();
+
   public Poller() {
     this.timer = new Timer("heroku-java-metrics-agent",true);
     this.registry = CollectorRegistry.defaultRegistry;
@@ -30,26 +30,36 @@ public class Poller {
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
+        Map<String, Metric> counters = new ConcurrentHashMap<>();
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode metricsJson = mapper.createObjectNode();
-        ObjectNode gauges = metricsJson.putObject("gauges");
-        ObjectNode counters = metricsJson.putObject("counters");
+        ObjectNode gaugesJson = metricsJson.putObject("gauges");
+        ObjectNode countersJson = metricsJson.putObject("counters");
 
         Enumeration<Collector.MetricFamilySamples> samples = registry.metricFamilySamples();
         while (samples.hasMoreElements()) {
           Collector.MetricFamilySamples metricFamilySamples = samples.nextElement();
           switch (metricFamilySamples.type) {
             case GAUGE:
-              collectSamples(gauges, metricFamilySamples.samples);
+              for (Metric m : collectSamples(metricFamilySamples.samples)) {
+                gaugesJson.put(m.getKey(), m.getValue());
+              }
               break;
             case COUNTER:
-              collectSamples(counters, metricFamilySamples.samples);
+              for (Metric m : collectSamples(metricFamilySamples.samples)) {
+                countersJson.put(m.getKey(), m.getDerivedValue(previousCounters.get(m.getKey())));
+                counters.put(m.getKey(), m);
+              }
               break;
             case SUMMARY:
-              collectSamples(counters, metricFamilySamples.samples);
+              for (Metric m : collectSamples(metricFamilySamples.samples)) {
+                countersJson.put(m.getKey(), m.getDerivedValue(previousCounters.get(m.getKey())));
+                counters.put(m.getKey(), m);
+              }
               break;
           }
         }
+        previousCounters = counters;
         callback.apply(mapper, metricsJson);
       }
     }, 5, 5);
@@ -63,14 +73,16 @@ public class Poller {
     public abstract void apply(ObjectMapper mapper, ObjectNode metricsJson);
   }
 
-  private void collectSamples(ObjectNode node, List<Collector.MetricFamilySamples.Sample> samples) {
+  private List<Metric> collectSamples(List<Collector.MetricFamilySamples.Sample> samples) {
+    List<Metric> metrics = new ArrayList<>();
     for (Collector.MetricFamilySamples.Sample sample : samples) {
       StringBuilder key = new StringBuilder(sample.name);
       for (int i = 0; i < sample.labelNames.size(); i++) {
         key.append(".").append(massageLabel(sample.labelNames.get(i) + "_" + sample.labelValues.get(i)));
       }
-      node.put(key.toString(), sample.value);
+      metrics.add(new Metric(key.toString(), sample.value));
     }
+    return metrics;
   }
 
   private String massageLabel(String rune) {
