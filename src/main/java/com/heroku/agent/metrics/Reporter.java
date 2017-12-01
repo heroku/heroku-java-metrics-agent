@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,7 @@ public class Reporter {
   }
 
   private Boolean sendPost(String message, Integer retries) throws IOException {
-    HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+    HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
     con.setRequestMethod("POST");
 
