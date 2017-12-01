@@ -32,7 +32,7 @@
                                 <artifactItem>
                                     <groupId>com.heroku.agent</groupId>
                                     <artifactId>heroku-java-metrics-agent</artifactId>
-                                    <version>3.3-SNAPSHOT</version>
+                                    <version>@project.version@</version>
                                     <destFileName>heroku-java-metrics-agent.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
