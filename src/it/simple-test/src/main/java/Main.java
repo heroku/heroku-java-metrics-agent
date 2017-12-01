@@ -7,6 +7,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
+import org.json.*;
+
 public class Main {
 
   public static void main(String[] args) throws Exception {
@@ -44,7 +46,18 @@ public class Main {
 
       System.out.println(sb.toString());
 
-      System.out.println(t.getRequestBody());
+      JSONObject obj = new JSONObject(sb.toString());
+
+      try {
+        System.out.println(obj.getJSONObject("gauges").get("jvm_memory_bytes_used.area_heap"));
+        System.out.println(obj.getJSONObject("gauges").get("jvm_buffer_pool_bytes_capacity.name_direct"));
+        System.out.println(obj.getJSONObject("counters").get("jvm_buffer_pool_count.name_direct"));
+      } catch (Exception e) {
+        System.out.println("server: error parsing json");
+        e.printStackTrace();
+        System.exit(1);
+      }
+
       String response = "OK";
       t.sendResponseHeaders(200, response.length());
       OutputStream os = t.getResponseBody();
