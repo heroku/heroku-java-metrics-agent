@@ -43,7 +43,7 @@ public class PollerTest {
 
           JsonNode countersNode = metricsJson.get("counters");
           assertNotNull(countersNode);
-//          assertTrue(countersNode.has("jvm_gc_collection_seconds_count.gc_PS_Scavenge"));
+          assertTrue(countersNode.has("jvm_gc_collection_seconds_count.gc_all"));
           assertTrue(countersNode.has("jvm_buffer_pool_count.name_direct"));
         } catch (Throwable t) {
           this.throwable = t;

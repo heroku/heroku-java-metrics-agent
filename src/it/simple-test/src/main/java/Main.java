@@ -52,6 +52,7 @@ public class Main {
         System.out.println(obj.getJSONObject("gauges").get("jvm_memory_bytes_used.area_heap"));
         System.out.println(obj.getJSONObject("gauges").get("jvm_buffer_pool_bytes_capacity.name_direct"));
         System.out.println(obj.getJSONObject("counters").get("jvm_buffer_pool_count.name_direct"));
+        System.out.println(obj.getJSONObject("counters").get("jvm_gc_collection_seconds_count.gc_all"));
       } catch (Exception e) {
         System.out.println("server: error parsing json");
         e.printStackTrace();

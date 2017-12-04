@@ -15,6 +15,13 @@ import io.prometheus.client.CollectorRegistry;
  */
 public class Poller {
 
+  private static final List<String> GC_METRICS = Arrays.asList(
+      "jvm_gc_collection_seconds_count.gc_PS_Scavenge",
+      "jvm_gc_collection_seconds_count.gc_PS_MarkSweep",
+      "jvm_gc_collection_seconds_count.gc_G1_Young_Generation",
+      "jvm_gc_collection_seconds_count.gc_G1_Old_Generation"
+  );
+
   private CollectorRegistry registry;
 
   private final Timer timer;
@@ -59,6 +66,8 @@ public class Poller {
               break;
           }
         }
+        countersJson.put("jvm_gc_collection_seconds_count.gc_all", sumGc(counters, countersJson));
+
         previousCounters = counters;
         callback.apply(mapper, metricsJson);
       }
@@ -71,6 +80,16 @@ public class Poller {
 
   public static abstract class Callback {
     public abstract void apply(ObjectMapper mapper, ObjectNode metricsJson);
+  }
+
+  private Double sumGc(Map<String, Metric> counters, ObjectNode countersJson) {
+    Double runningTotal = 0d;
+    for (String key : counters.keySet()) {
+      if (GC_METRICS.contains(key)) {
+        runningTotal += countersJson.get(key).asDouble();
+      }
+    }
+    return runningTotal;
   }
 
   private List<Metric> collectSamples(List<Collector.MetricFamilySamples.Sample> samples) {
