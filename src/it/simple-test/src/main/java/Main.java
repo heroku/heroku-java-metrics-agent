@@ -38,6 +38,11 @@ public class Main {
   static class MyHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange t) throws IOException {
+      if (!"POST".equals(t.getRequestMethod())) {
+        System.out.println("server: unexpected HTTP method (" + t.getRequestMethod() + ")");
+        System.exit(1);
+      }
+
       int ch;
       StringBuilder sb = new StringBuilder();
       while((ch = t.getRequestBody().read()) != -1) {
