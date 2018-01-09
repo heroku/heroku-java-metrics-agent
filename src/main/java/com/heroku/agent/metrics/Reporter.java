@@ -53,11 +53,9 @@ public class Reporter {
 
       con.setRequestMethod("POST");
 
-      String now = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(new Date());
-
       con.setRequestProperty("Content-Type", "application/json");
       con.setRequestProperty("Measurements-Count", "1");
-      con.setRequestProperty("Measurements-Time", now);
+      con.setRequestProperty("Measurements-Time", now());
 
       con.setDoOutput(true);
       DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -109,7 +107,16 @@ public class Reporter {
 
   private Boolean curl(String urlStr, String message) throws IOException, InterruptedException {
     MetricsAgent.logDebug("reporter", "attempting http post with curl");
-    ProcessBuilder pb = new ProcessBuilder().command("curl", "-X", "POST", "-d", message.replace("\n", ""), "-L", urlStr);
+    ProcessBuilder pb = new ProcessBuilder().command("curl",
+        "-H", "Content-Type: application/json",
+        "-H", "Measurements-Count: 1",
+        "-H", String.format("Measurements-Time: %s", now()),
+        "-X", "POST", "-d", message.replace("\n", ""), "-L", urlStr);
     return pb.start().waitFor() == 0;
+  }
+
+  private String now() {
+    return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(new Date());
+
   }
 }
