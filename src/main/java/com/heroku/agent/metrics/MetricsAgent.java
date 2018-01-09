@@ -34,7 +34,7 @@ public class MetricsAgent {
     }
   }
 
-  private static void logDebug(String at, String message) {
+  static void logDebug(String at, String message) {
     String debug = System.getenv("HEROKU_METRICS_DEBUG");
     if ("1".equals(debug) || "true".equals(debug)) {
       System.out.println("debug at=\"" + at + "\" component=heroku-java-metrics-agent message=\"" + message + "\"");

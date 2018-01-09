@@ -91,6 +91,7 @@ public class Reporter {
       }
     } catch (Exception e) {
       try {
+        MetricsAgent.logDebug("reporter", "error making http post: " + e.getMessage());
         if (curl(url.toString(), message)) {
           return true;
         } else {
@@ -107,7 +108,8 @@ public class Reporter {
   }
 
   private Boolean curl(String urlStr, String message) throws IOException, InterruptedException {
-    ProcessBuilder pb = new ProcessBuilder().command("curl", "-X", "POST", "-d", message, "-L", urlStr);
+    MetricsAgent.logDebug("reporter", "attempting http post with curl");
+    ProcessBuilder pb = new ProcessBuilder().command("curl", "-X", "POST", "-d", message.replace("\n", ""), "-L", urlStr);
     return pb.start().waitFor() == 0;
   }
 }
