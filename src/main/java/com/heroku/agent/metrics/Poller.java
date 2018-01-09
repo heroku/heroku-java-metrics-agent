@@ -71,7 +71,7 @@ public class Poller {
         previousCounters = counters;
         callback.apply(mapper, metricsJson);
       }
-    }, 5, 5);
+    }, 5000, 5000);
   }
 
   public void cancel() {
