@@ -20,19 +20,26 @@ public class Reporter {
   private static final Integer MAX_RETRIES = 3;
 
   public Reporter() throws MalformedURLException {
-    String urlString = System.getenv("HEROKU_METRICS_URL");
-    if (urlString != null) {
-      this.url = new URL(urlString);
-    }
+    this(System.getenv("HEROKU_METRICS_URL"));
+  }
+
+  public Reporter(String urlString) throws MalformedURLException {
+    this(urlString == null? null : new URL(urlString));
+  }
+
+  public Reporter(URL url) throws MalformedURLException {
+    this.url = url;
   }
 
   public Boolean enabled() {
     return this.url != null;
   }
 
-  public void report(String message) throws IOException {
+  public Boolean report(String message) throws IOException {
     if (enabled()) {
-      sendPost(message);
+      return sendPost(message);
+    } else {
+      return false;
     }
   }
 
@@ -84,19 +91,23 @@ public class Reporter {
       }
     } catch (Exception e) {
       try {
-        curl(url.toString(), message);
+        if (curl(url.toString(), message)) {
+          return true;
+        } else {
+          throw new IOException("failed to retry with curl", e);
+        }
       } catch (Exception curlException) {
         if (e instanceof IOException) {
           throw e;
         } else {
-          throw new RuntimeException("failed to retry with curl", e);
+          throw new IOException("failed to retry with curl", e);
         }
       }
     }
   }
 
-  private void curl(String urlStr, String message) throws IOException, InterruptedException {
-    ProcessBuilder pb = new ProcessBuilder().command("curl", "-d", message, "-L", urlStr);
-    pb.start().waitFor();
+  private Boolean curl(String urlStr, String message) throws IOException, InterruptedException {
+    ProcessBuilder pb = new ProcessBuilder().command("curl", "-X", "POST", "-d", message, "-L", urlStr);
+    return pb.start().waitFor() == 0;
   }
 }
