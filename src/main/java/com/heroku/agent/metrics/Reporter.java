@@ -111,7 +111,9 @@ public class Reporter {
         "-H", "Content-Type: application/json",
         "-H", "Measurements-Count: 1",
         "-H", String.format("Measurements-Time: %s", now()),
-        "-X", "POST", "-d", message.replace("\n", ""), "-L", urlStr);
+        "-X", "POST",
+        "-d", message.replace("\n", ""),
+        "-L", urlStr);
     return pb.start().waitFor() == 0;
   }
 
