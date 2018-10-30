@@ -33,6 +33,6 @@ set -e
 
 ./mvnw release:clean release:prepare -DdryRun
 
-./mvnw release:prepare
+./mvnw release:clean release:prepare
 
 ./mvnw release:perform
