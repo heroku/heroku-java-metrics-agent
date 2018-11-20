@@ -44,13 +44,11 @@ public class JBossDetector extends AbstractServerDetector {
     // For Thorntail (Wildfly Swarm):
     String bootModuleLoader = System.getProperty("boot.module.loader");
     if (bootModuleLoader != null) {
-      System.out.println("bootModuleLoader: " + bootModuleLoader);
       return bootModuleLoader.contains("wildfly");
     }
     // For Thorntail (Wildfly Swarm):
     String swarmPort = System.getProperty("swarm.http.port");
     if (swarmPort != null) {
-      System.out.println("swarmPort: " + swarmPort);
       return true;
     }
     return false;
