@@ -33,7 +33,7 @@ public class Poller {
     this.registry = CollectorRegistry.defaultRegistry;
   }
 
-  public void poll(final Callback callback) throws IOException {
+  public void poll(final Callback callback) {
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
