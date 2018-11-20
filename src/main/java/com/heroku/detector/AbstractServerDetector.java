@@ -5,6 +5,13 @@ import java.lang.instrument.Instrumentation;
 public abstract class AbstractServerDetector implements ServerDetector {
 
   /**
+   * By default do nothing
+   */
+  public boolean detect() {
+    return false;
+  }
+
+  /**
    * By default do nothing during JVM agent startup
    */
   public void jvmAgentStartup(Instrumentation instrumentation) {

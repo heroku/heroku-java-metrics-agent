@@ -17,11 +17,34 @@ public class MetricsAgent {
   private static final List<ServerDetector> SERVER_DETECTORS =
       Collections.singletonList((ServerDetector) new JBossDetector());
 
-  public static void premain(String agentArgs, Instrumentation instrumentation) {
-    awaitServerInitialization(instrumentation);
+  public static void premain(String agentArgs, final Instrumentation instrumentation) {
+    logDebug("premain", "detecting");
+    if (detectServers()) {
+      logDebug("premain", "starting daemon");
+      Thread thread = new Thread("HerokuMetricsAgent") {
+        public void run() {
+          startAgent(instrumentation);
+        }
+      };
+      thread.setDaemon(true);
+      thread.start();
+    } else {
+      logDebug("premain", "starting");
+      startAgent(instrumentation);
+    }
+  }
 
-    logDebug("premain", "starting");
+  static void logDebug(String at, String message) {
+    String debug = System.getenv("HEROKU_METRICS_DEBUG");
+    if ("1".equals(debug) || "true".equals(debug)) {
+      System.out.println("debug at=\"" + at + "\" component=heroku-java-metrics-agent message=\"" + message + "\"");
+    }
+  }
+
+  private static void startAgent(Instrumentation instrumentation) {
     try {
+      awaitServerInitialization(instrumentation);
+
       DefaultExports.initialize();
       new BufferPoolsExports().register();
 
@@ -43,13 +66,6 @@ public class MetricsAgent {
     }
   }
 
-  static void logDebug(String at, String message) {
-    String debug = System.getenv("HEROKU_METRICS_DEBUG");
-    if ("1".equals(debug) || "true".equals(debug)) {
-      System.out.println("debug at=\"" + at + "\" component=heroku-java-metrics-agent message=\"" + message + "\"");
-    }
-  }
-
   private static void logError(String at, Throwable t) {
     System.out.println("error at=\"" + at + "\" component=heroku-java-metrics-agent message=\"" + t.getMessage() + "\"");
 
@@ -59,8 +75,19 @@ public class MetricsAgent {
     }
   }
 
+  private static boolean detectServers() {
+    for (ServerDetector detector : SERVER_DETECTORS) {
+      logDebug("detect-server", detector.getClass().toString());
+      if (detector.detect()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private static void awaitServerInitialization(final Instrumentation instrumentation) {
     for (ServerDetector detector : SERVER_DETECTORS) {
+      logDebug("await-server", detector.getClass().toString());
       detector.jvmAgentStartup(instrumentation);
     }
   }
