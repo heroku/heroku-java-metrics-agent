@@ -18,6 +18,8 @@ public class Poller {
   private static final List<String> GC_METRICS = Arrays.asList(
       "jvm_gc_collection_seconds_count.gc_PS_Scavenge",
       "jvm_gc_collection_seconds_count.gc_PS_MarkSweep",
+      "jvm_gc_collection_seconds_count.gc_ParNew",
+      "jvm_gc_collection_seconds_count.gc_ConcurrentMarkSweep",
       "jvm_gc_collection_seconds_count.gc_G1_Young_Generation",
       "jvm_gc_collection_seconds_count.gc_G1_Old_Generation"
   );
