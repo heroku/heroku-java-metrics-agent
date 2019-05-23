@@ -28,8 +28,8 @@
   </distributionManagement>
   <scm>
     <url>https://github.com/heroku/heroku-java-metrics-agent</url>
-    <connection>scm:git:https://github.com/heroku/heroku-java-metrics-agent.git</connection>
-    <developerConnection>scm:git:https://github.com/heroku/heroku-java-metrics-agent.git</developerConnection>
+    <connection>scm:git:git://github.com/heroku/heroku-java-metrics-agent.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/heroku/heroku-java-metrics-agent.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   <developers>
@@ -257,6 +257,12 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
           </plugin>
         </plugins>
       </build>
