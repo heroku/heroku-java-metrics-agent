@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -e
+set -o pipefail
+set -eu
 
 # Releasing to Maven Central can be confusing. So this will partially automate
 # the process.
@@ -31,8 +32,8 @@ set -e
 #   </profile>
 # </profiles>
 
-./mvnw release:clean release:prepare -DdryRun
+./mvnw ${MAVEN_CUSTOM_OPTS:-} release:clean release:prepare -DdryRun
 
-./mvnw release:clean release:prepare
+./mvnw ${MAVEN_CUSTOM_OPTS:-} release:clean release:prepare
 
-./mvnw release:perform
+./mvnw ${MAVEN_CUSTOM_OPTS:-} release:perform
