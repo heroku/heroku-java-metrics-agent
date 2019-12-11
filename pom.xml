@@ -4,7 +4,7 @@
 
   <groupId>com.heroku.agent</groupId>
   <artifactId>heroku-java-metrics-agent</artifactId>
-  <version>3.14-SNAPSHOT</version>
+  <version>3.14</version>
   <packaging>jar</packaging>
 
   <name>heroku-java-metrics-agent</name>
@@ -30,7 +30,7 @@
     <url>https://github.com/heroku/heroku-java-metrics-agent</url>
     <connection>scm:git:git://github.com/heroku/heroku-java-metrics-agent.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/heroku/heroku-java-metrics-agent.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>heroku-java-metrics-agent-3.14</tag>
   </scm>
   <developers>
     <developer>
