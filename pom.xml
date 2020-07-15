@@ -53,13 +53,20 @@
     <url>https://github.com/heroku/heroku-java-metrics-agent/issues/new</url>
   </issueManagement>
 
+  <properties>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <prometheus.version>0.6.0</prometheus.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <build>
     <finalName>heroku-java-metrics-agent</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.2.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -70,7 +77,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>${source.plugin.version}</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <id>attach-source</id>
@@ -83,7 +90,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${javadoc.plugin.version}</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>attach-javadoc</id>
@@ -93,14 +100,14 @@
             </goals>
             <configuration>
               <source>1.8</source>
-              <additionalparam>-Xdoclint:none</additionalparam>
+              <doclint>none</doclint>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>${gpg.plugin.version}</version>
+        <version>1.6</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -131,7 +138,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -160,20 +167,28 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.6.3</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-
-  <properties>
-    <source.plugin.version>3.0.1</source.plugin.version>
-    <gpg.plugin.version>1.6</gpg.plugin.version>
-    <javadoc.plugin.version>2.10.4</javadoc.plugin.version>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
-    <prometheus.version>0.6.0</prometheus.version>
-    <jackson.version>2.10.0</jackson.version>
-    <junit.version>4.12</junit.version>
-    <mockito.version>2.25.0</mockito.version>
-  </properties>
 
   <dependencies>
     <dependency>
@@ -194,18 +209,18 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+      <version>2.11.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
+      <version>4.13</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
+      <version>3.4.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -221,7 +236,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-invoker-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>3.2.1</version>
             <configuration>
               <projectsDirectory>src/it</projectsDirectory>
               <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
