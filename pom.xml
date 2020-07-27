@@ -16,7 +16,7 @@
   <licenses>
     <license>
       <name>MIT</name>
-      <url>https://github.com/heroku/heroku-java-metrics-agent/blob/master/LICENSE</url>
+      <url>https://github.com/heroku/heroku-java-metrics-agent/blob/main/LICENSE</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
