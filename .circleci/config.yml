@@ -3,7 +3,8 @@ version: 2.1
 executors:
   openjdk-7:
     docker:
-      - image: cimg/openjdk:7.0
+      # CircleCI no longer provides OpenJDK 7 images. We use Azul's official image instead.
+      - image: azul/zulu-openjdk:7
   openjdk-8:
     docker:
       - image: cimg/openjdk:8.0
@@ -19,6 +20,22 @@ jobs:
     executor:
       name: << parameters.executor >>
     steps:
+      - run:
+          # Azul's images do not ship with git installed
+          name: Install git (if necessary)
+          command: |
+            if ! command -v git; then
+              apt-get update
+              apt-get install -y git
+            fi
+      - run:
+          # Azul's images do not ship with curl installed
+          name: Install curl (if necessary)
+          command: |
+            if ! command -v curl; then
+              apt-get update
+              apt-get install -y curl
+            fi
       - checkout
       - run: ./mvnw clean install -Pit
       - run:
