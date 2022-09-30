@@ -1,0 +1,38 @@
+name: heroku/heroku-java-metrics-agent/ci
+on:
+  push:
+jobs:
+  maven:
+    runs-on: sfdc-hk-ubuntu-latest
+    strategy:
+      matrix:
+        executor:
+        - openjdk-7
+        - openjdk-8
+        - openjdk-11
+    steps:
+    - name: Install git (if necessary)
+      run: |-
+        if ! command -v git; then
+          apt-get update
+          apt-get install -y git
+        fi
+    - name: Install curl (if necessary)
+      run: |-
+        if ! command -v curl; then
+          apt-get update
+          apt-get install -y curl
+        fi
+    - uses: actions/checkout@v2
+    - run: "./mvnw clean install -Pit"
+    - name: Save test results
+      run: |-
+        mkdir -p ~/test-results/junit/
+        find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+      if: always()
+    - uses: actions/upload-artifact@v2
+      with:
+        path: "~/test-results"
+    - uses: actions/upload-artifact@v2
+      with:
+        path: "~/test-results/junit"
