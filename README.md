@@ -1,7 +1,8 @@
 # Heroku Java Metrics Agent
-[![](https://badgen.net/github/license/heroku/heroku-java-metrics-agent)](LICENSE)
-[![](https://badgen.net/maven/v/maven-central/com.heroku.agent/heroku-java-metrics-agent)](https://search.maven.org/artifact/com.heroku.agent/heroku-java-metrics-agent)
-[![](https://badgen.net/circleci/github/heroku/heroku-java-metrics-agent/main)](https://circleci.com/gh/heroku/heroku-java-metrics-agent/tree/main)
+
+![License](https://img.shields.io/github/license/heroku/heroku-java-metrics-agent)
+![Maven Central](https://img.shields.io/maven-central/v/com.heroku.agent/heroku-java-metrics-agent)
+[![CI](https://github.com/heroku/heroku-java-metrics-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/heroku/heroku-java-metrics-agent/actions/workflows/ci.yml)
 
 A lightweight Java agent that exposes a [Prometheus](https://prometheus.io) Java client.
 
