@@ -1,4 +1,4 @@
-package com.heroku.detector;
+package com.heroku.agent.metrics.detector;
 
 import java.lang.instrument.Instrumentation;
 
@@ -56,6 +56,7 @@ public class JBossDetector extends AbstractServerDetector {
     if (thorntailPort != null) {
       return true;
     }
+
     return false;
   }
 

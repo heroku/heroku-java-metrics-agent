@@ -1,0 +1,66 @@
+package com.heroku.agent.metrics;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+public final class JsonSerializerTest {
+
+    @Test
+    public void serializeTest() {
+        Map<HerokuJvmMetrics.Gc, HerokuJvmMetrics.GcMetrics> gcMetrics = new HashMap<>();
+        gcMetrics.put(HerokuJvmMetrics.Gc.G1OldGeneration, new HerokuJvmMetrics.GcMetrics(2, 3));
+        gcMetrics.put(HerokuJvmMetrics.Gc.G1YoungGeneration, new HerokuJvmMetrics.GcMetrics(4, 5));
+
+        String jsonString = JsonSerializer.serialize(new HerokuJvmMetrics(1,2,3,4,5,6, gcMetrics), null);
+
+        JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
+        JsonObject gaugesJson = json.getAsJsonObject("gauges");
+        assertThat(gaugesJson.get("jvm_memory_bytes_used.area_heap").getAsDouble(), is(1.0));
+        assertThat(gaugesJson.get("jvm_memory_bytes_used.area_nonheap").getAsDouble(), is(2.0));
+        assertThat(gaugesJson.get("jvm_memory_bytes_committed.area_heap").getAsDouble(), is(3.0));
+        assertThat(gaugesJson.get("jvm_memory_bytes_committed.area_nonheap").getAsDouble(), is(4.0));
+        assertThat(gaugesJson.get("jvm_buffer_pool_bytes_used.name_direct").getAsDouble(), is(5.0));
+        assertThat(gaugesJson.get("jvm_buffer_pool_bytes_used.name_mapped").getAsDouble(), is(6.0));
+
+        JsonObject countersJson = json.getAsJsonObject("counters");
+        assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_all").getAsDouble(), is(6.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_G1_Old_Generation").getAsDouble(), is(2.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_sum.gc_G1_Old_Generation").getAsDouble(), is(3.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_G1_Young_Generation").getAsDouble(), is(4.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_sum.gc_G1_Young_Generation").getAsDouble(), is(5.0));
+    }
+
+    @Test
+    public void serializeTestWithPreviousMetrics() {
+        Map<HerokuJvmMetrics.Gc, HerokuJvmMetrics.GcMetrics> gcMetrics = new HashMap<>();
+        gcMetrics.put(HerokuJvmMetrics.Gc.G1OldGeneration, new HerokuJvmMetrics.GcMetrics(2, 3));
+        gcMetrics.put(HerokuJvmMetrics.Gc.G1YoungGeneration, new HerokuJvmMetrics.GcMetrics(4, 5));
+        HerokuJvmMetrics metrics = new HerokuJvmMetrics(1, 2, 3, 4, 5, 6, gcMetrics);
+
+        String jsonString = JsonSerializer.serialize(metrics, metrics);
+
+        JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
+        JsonObject gaugesJson = json.getAsJsonObject("gauges");
+        assertThat(gaugesJson.get("jvm_memory_bytes_used.area_heap").getAsDouble(), is(1.0));
+        assertThat(gaugesJson.get("jvm_memory_bytes_used.area_nonheap").getAsDouble(), is(2.0));
+        assertThat(gaugesJson.get("jvm_memory_bytes_committed.area_heap").getAsDouble(), is(3.0));
+        assertThat(gaugesJson.get("jvm_memory_bytes_committed.area_nonheap").getAsDouble(), is(4.0));
+        assertThat(gaugesJson.get("jvm_buffer_pool_bytes_used.name_direct").getAsDouble(), is(5.0));
+        assertThat(gaugesJson.get("jvm_buffer_pool_bytes_used.name_mapped").getAsDouble(), is(6.0));
+
+        // Counters must be serialized as deltas:
+        JsonObject countersJson = json.getAsJsonObject("counters");
+        assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_all").getAsDouble(), is(0.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_G1_Old_Generation").getAsDouble(), is(0.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_sum.gc_G1_Old_Generation").getAsDouble(), is(0.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_G1_Young_Generation").getAsDouble(), is(0.0));
+        assertThat(countersJson.get("jvm_gc_collection_seconds_sum.gc_G1_Young_Generation").getAsDouble(), is(0.0));
+    }
+}

@@ -1,124 +1,92 @@
 package com.heroku.agent.metrics;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.locks.LockSupport;
 
-/**
- * @author Joe Kutner on 11/2/17.
- *         Twitter: @codefinger
- */
 public class Reporter {
+  private final URL endpoint;
 
-  private URL url;
-
-  private static final Integer MAX_RETRIES = 3;
-
-  public Reporter() throws MalformedURLException {
-    this(System.getenv("HEROKU_METRICS_URL"));
+  public Reporter(URL endpoint) {
+    this.endpoint = endpoint;
   }
 
-  public Reporter(String urlString) throws MalformedURLException {
-    this(urlString == null? null : new URL(urlString));
+  public void report(String jsonString) {
+      sendPost(jsonString, Constants.REPORTER_MAX_RETRIES);
   }
 
-  public Reporter(URL url) throws MalformedURLException {
-    this.url = url;
-  }
-
-  public Boolean enabled() {
-    return this.url != null;
-  }
-
-  public Boolean report(String message) throws IOException {
-    if (enabled()) {
-      return sendPost(message);
-    } else {
-      return false;
-    }
-  }
-
-  private Boolean sendPost(String message) throws IOException {
-    return sendPost(message, 0);
-  }
-
-  private Boolean sendPost(String message, Integer retries) throws IOException {
-    try {
-      HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-      con.setRequestMethod("POST");
-
-      con.setRequestProperty("Content-Type", "application/json");
-      con.setRequestProperty("Measurements-Count", "1");
-      con.setRequestProperty("Measurements-Time", now());
-
-      con.setDoOutput(true);
-      DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-
-      wr.writeBytes(message);
-      wr.flush();
-      wr.close();
-
-      int responseCode = con.getResponseCode();
-
-      if (responseCode >= 400 && responseCode < 500) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-
-        System.out.println("error at=send-post component=heroku-java-metrics-agent message=\"upstream service error\" status=" + responseCode + " response=\"" + response + "\"");
-        return false;
-      } else if (responseCode >= 200 && responseCode < 300) {
-        return true;
-      } else {
-        if (retries > MAX_RETRIES) {
-          return false;
-        } else {
-          LockSupport.parkNanos(2 * 1000000);
-          return sendPost(message, retries + 1);
-        }
-      }
-    } catch (Exception e) {
+  private void sendPost(String jsonString, int remainingRetries) {
       try {
-        MetricsAgent.logDebug("reporter", "error making http post: " + e.getMessage());
-        if (curl(url.toString(), message)) {
-          return true;
-        } else {
-          throw new IOException("failed to retry with curl", e);
-        }
-      } catch (Exception curlException) {
-        if (e instanceof IOException) {
-          throw e;
-        } else {
-          throw new IOException("failed to retry with curl", e);
-        }
+          HttpURLConnection connection = (HttpURLConnection) endpoint.openConnection();
+          connection.setRequestMethod("POST");
+          connection.setRequestProperty("Content-Type", "application/json");
+          connection.setRequestProperty("Measurements-Count", "1");
+          connection.setRequestProperty("Measurements-Time", iso3339DateTimeStringNow());
+          connection.setDoOutput(true);
+
+          DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+          outputStream.writeBytes(jsonString);
+          outputStream.flush();
+          outputStream.close();
+
+          int responseCode = connection.getResponseCode();
+
+          // HTTP success status codes
+          if (responseCode >= 200 && responseCode < 300) {
+              return;
+          }
+
+          // HTTP client error status codes
+          if (responseCode >= 400 && responseCode < 500) {
+              try {
+                  Logger.logResponseError("send-post", "upstream service error", responseCode, Utils.readAllUtf8(connection.getInputStream()));
+              } catch (IOException e) {
+                  Logger.logException("send-post", e);
+              }
+
+              return;
+          }
+
+          if (remainingRetries <= 0) {
+              Logger.logDebug("send-post", "Used up all retries, giving up");
+              return;
+          }
+
+          LockSupport.parkNanos(Constants.REPORTER_RETRY_DELAY_MS * 1000000);
+          sendPost(jsonString, remainingRetries - 1);
+      } catch (IOException e) {
+          try {
+              boolean curlSuccessful = sendPostWithCurl(jsonString);
+              if (!curlSuccessful) {
+                  Logger.logDebug("reporter", "failed to retry with curl (non-zero exit code)");
+              }
+          } catch (Exception curlException) {
+              Logger.logDebug("reporter", "failed to retry with curl (exception)");
+          }
       }
-    }
   }
 
-  private Boolean curl(String urlStr, String message) throws IOException, InterruptedException {
-    MetricsAgent.logDebug("reporter", "attempting http post with curl");
-    ProcessBuilder pb = new ProcessBuilder().command("curl",
+
+  private boolean sendPostWithCurl(String jsonString) throws IOException, InterruptedException {
+    Logger.logDebug("reporter", "attempting http post with curl");
+
+    ProcessBuilder processBuilder = new ProcessBuilder().command(
+        "curl",
         "-H", "Content-Type: application/json",
         "-H", "Measurements-Count: 1",
-        "-H", String.format("Measurements-Time: %s", now()),
+        "-H", String.format("Measurements-Time: %s", iso3339DateTimeStringNow()),
         "-X", "POST",
-        "-d", message.replace("\n", ""),
-        "-L", urlStr);
-    return pb.start().waitFor() == 0;
+        "-d", jsonString.replace("\n", ""),
+        "-L", endpoint.toString()
+    );
+
+    return processBuilder.start().waitFor() == 0;
   }
 
-  private String now() {
+  private String iso3339DateTimeStringNow() {
     return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(new Date());
-
   }
 }

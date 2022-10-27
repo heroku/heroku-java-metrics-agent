@@ -1,11 +1,11 @@
-package com.heroku.detector;
+package com.heroku.agent.metrics.detector;
 
 import java.lang.instrument.Instrumentation;
 
 public abstract class AbstractServerDetector implements ServerDetector {
 
   /**
-   * By default do nothing
+   * By default, do nothing
    */
   public boolean detect() {
     return false;

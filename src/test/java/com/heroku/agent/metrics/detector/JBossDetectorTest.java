@@ -1,4 +1,4 @@
-package com.heroku.detector;
+package com.heroku.agent.metrics.detector;
 
 import org.junit.Before;
 import org.junit.Test;
