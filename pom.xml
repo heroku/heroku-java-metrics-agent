@@ -56,7 +56,7 @@
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <prometheus.version>0.6.0</prometheus.version>
+    <prometheus.version>0.9.0</prometheus.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -209,7 +209,8 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.11.1</version>
+      <!-- This is the last version of jackson-databind that supports Java 7. -->
+      <version>2.12.7.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
