@@ -56,7 +56,7 @@
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <prometheus.version>0.9.0</prometheus.version>
+    <prometheus.version>0.16.0</prometheus.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
