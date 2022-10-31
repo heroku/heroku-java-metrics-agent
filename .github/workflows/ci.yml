@@ -10,19 +10,67 @@ permissions:
   contents: read
 
 jobs:
-  maven:
-    name: "Execute build, run tests (Java ${{ matrix.java-version }})"
+  # Build the agent once and store it as an artifact for subsequent integration tests. This is close to how it works
+  # in production, where the agent is build once and used across all OpenJDK versions.
+  build-agent:
+    name: "Build agent on OpenJDK 7"
     runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 7
+      - run: "./mvnw --batch-mode clean verify package"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: agent-jar
+          path: target/heroku-java-metrics-agent.jar
+  integration-test:
+    name: "Integration Test (Java ${{ matrix.java-version }}, GC: ${{ matrix.gc }})"
+    runs-on: ubuntu-22.04
+    needs: build-agent
     strategy:
       matrix:
+        # These are all currently supported OpenJDK versions on Heroku. Update this to reflect supported versions:
+        # https://devcenter.heroku.com/articles/java-support#supported-java-versions
         java-version:
           - 7
           - 8
           - 11
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+        gc:
+          - parallel
+          - g1
+        # CMS GC is only supported in OpenJDK <= 13
+        include:
+          - java-version: 7
+            gc: cms
+          - java-version: 8
+            gc: cms
+          - java-version: 11
+            gc: cms
+          - java-version: 13
+            gc: cms
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: ${{ matrix.java-version }}
-      - run: "./mvnw --batch-mode clean install -Pit"
+      - name: Update Rust toolchain
+        run: rustup update
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.0.1
+      - uses: actions/download-artifact@v3
+        with:
+          name: agent-jar
+      - name: Run integration tests
+        run: cargo run -- "../heroku-java-metrics-agent.jar" "${{ matrix.gc }}" "9876"
+        working-directory: integration-test
