@@ -19,8 +19,11 @@ public final class JsonSerializer {
         //
         // - General JSON structure is fixed/static
         // - All JSON object keys are static and fully under our control.
-        // - All JSON field values are strictly of type double, even though they are dynamic, we know that we never have
-        //   to escape them. (Ref: https://www.rfc-editor.org/rfc/rfc7159#section-6, https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html#toString(double), https://docs.oracle.com/javase/7/docs/api/java/lang/Long.html#toString(long))
+        // - All JSON field values are strictly of type double or long, even though they are dynamic, we know that we
+        //   never have to escape them:
+        //     - https://www.rfc-editor.org/rfc/rfc7159#section-6
+        //     - https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html#toString(double)
+        //     - https://docs.oracle.com/javase/7/docs/api/java/lang/Long.html#toString(long)
         //
         // This gives us the big benefit of not having to include a JSON library such as jackson or GSON:
         //
