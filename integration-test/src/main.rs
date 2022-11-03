@@ -1,4 +1,5 @@
-extern crate core;
+#![warn(clippy::pedantic)]
+#![warn(unused_crate_dependencies)]
 
 mod constants;
 mod gc;
@@ -39,13 +40,13 @@ fn main() {
         .wait()
         .expect("Couldn't wait for javac process completion!");
 
-    if !javac_exit_status.success() {
+    if javac_exit_status.success() {
+        println!("Compilation successful!");
+    } else {
         panic!(
             "Java compilation exited with exit-status: {}!",
             javac_exit_status
         );
-    } else {
-        println!("Compilation successful!")
     }
 
     // Spawn the compiled java application with the required GC settings and metrics agent injected
@@ -82,13 +83,13 @@ fn main() {
 
     let collected_requests = mock_metrics_server::collect_requests(
         SocketAddrV4::new(Ipv4Addr::LOCALHOST, args.port),
-        collect_duration.clone(),
+        collect_duration,
     );
 
     print!("Verifying request count...");
     assert_eq!(
-        collected_requests.len(),
-        expected_metrics_report_count(&collect_duration) as usize
+        collected_requests.len() as u64,
+        expected_metrics_report_count(&collect_duration)
     );
     println!("OK");
 
@@ -147,14 +148,14 @@ fn verify_request(request: &CollectedRequest, expected_gc: JavaGarbageCollector)
                 "Counter '{}' should be present when using '{:?}' GC!",
                 counter_name,
                 expected_gc
-            )
+            );
         } else {
             assert!(
                 !payload.counters.contains_key(counter_name),
                 "Counter '{}' should not be present when using '{:?}' GC!",
                 counter_name,
                 expected_gc
-            )
+            );
         }
     }
 }
