@@ -47,12 +47,20 @@ public final class JsonSerializerTest {
 
   @Test
   public void serializeTestWithPreviousMetrics() {
+    Map<HerokuJvmMetrics.Gc, HerokuJvmMetrics.GcMetrics> previousGcMetrics = new HashMap<>();
+    previousGcMetrics.put(
+        HerokuJvmMetrics.Gc.G1OldGeneration, new HerokuJvmMetrics.GcMetrics(1, 2));
+    previousGcMetrics.put(
+        HerokuJvmMetrics.Gc.G1YoungGeneration, new HerokuJvmMetrics.GcMetrics(3, 4));
+    HerokuJvmMetrics previousMetrics =
+        new HerokuJvmMetrics(10, 20, 30, 40, 50, 60, previousGcMetrics);
+
     Map<HerokuJvmMetrics.Gc, HerokuJvmMetrics.GcMetrics> gcMetrics = new HashMap<>();
     gcMetrics.put(HerokuJvmMetrics.Gc.G1OldGeneration, new HerokuJvmMetrics.GcMetrics(2, 3));
     gcMetrics.put(HerokuJvmMetrics.Gc.G1YoungGeneration, new HerokuJvmMetrics.GcMetrics(4, 5));
     HerokuJvmMetrics metrics = new HerokuJvmMetrics(1, 2, 3, 4, 5, 6, gcMetrics);
 
-    String jsonString = JsonSerializer.serialize(metrics, metrics);
+    String jsonString = JsonSerializer.serialize(metrics, previousMetrics);
 
     JsonObject json = new Gson().fromJson(jsonString, JsonObject.class);
     JsonObject gaugesJson = json.getAsJsonObject("gauges");
@@ -65,18 +73,18 @@ public final class JsonSerializerTest {
 
     // Counters must be serialized as deltas:
     JsonObject countersJson = json.getAsJsonObject("counters");
-    assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_all").getAsDouble(), is(0.0));
+    assertThat(countersJson.get("jvm_gc_collection_seconds_count.gc_all").getAsDouble(), is(2.0));
     assertThat(
         countersJson.get("jvm_gc_collection_seconds_count.gc_G1_Old_Generation").getAsDouble(),
-        is(0.0));
+        is(1.0));
     assertThat(
         countersJson.get("jvm_gc_collection_seconds_sum.gc_G1_Old_Generation").getAsDouble(),
-        is(0.0));
+        is(1.0));
     assertThat(
         countersJson.get("jvm_gc_collection_seconds_count.gc_G1_Young_Generation").getAsDouble(),
-        is(0.0));
+        is(1.0));
     assertThat(
         countersJson.get("jvm_gc_collection_seconds_sum.gc_G1_Young_Generation").getAsDouble(),
-        is(0.0));
+        is(1.0));
   }
 }

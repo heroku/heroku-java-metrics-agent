@@ -87,7 +87,7 @@ public final class JsonSerializer {
       stringBuilder.append(
           Math.max(
               0,
-              previousMetrics.getTotalGcCollectionCount() - metrics.getTotalGcCollectionCount()));
+              metrics.getTotalGcCollectionCount() - previousMetrics.getTotalGcCollectionCount()));
     } else {
       stringBuilder.append(metrics.getTotalGcCollectionCount());
     }
@@ -131,13 +131,13 @@ public final class JsonSerializer {
           reportedCollectionCount =
               Math.max(
                   0,
-                  previousGcMetrics.getCollectionCount()
-                      - gcMetrics.getValue().getCollectionCount());
+                  gcMetrics.getValue().getCollectionCount()
+                      - previousGcMetrics.getCollectionCount());
           reportedCollectionTimeInSeconds =
               Math.max(
                   0.0,
-                  previousGcMetrics.getCollectionTimeInSeconds()
-                      - gcMetrics.getValue().getCollectionTimeInSeconds());
+                  gcMetrics.getValue().getCollectionTimeInSeconds()
+                      - previousGcMetrics.getCollectionTimeInSeconds());
         }
       }
 
