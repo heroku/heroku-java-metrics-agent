@@ -15,7 +15,7 @@ use std::convert::identity;
 use std::net::{Ipv4Addr, SocketAddrV4};
 use std::path::PathBuf;
 use std::process::Command;
-use std::time::{Duration, SystemTime};
+use std::time::Duration;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -170,13 +170,6 @@ fn verify_request(request: &CollectedRequest, expected_gc: JavaGarbageCollector)
             );
         }
     }
-}
-
-fn expected_metrics_report_count(duration: &Duration) -> u64 {
-    let initial_delay = Duration::from_secs(5);
-    let interval = Duration::from_secs(5);
-
-    (*duration - initial_delay).as_secs() / interval.as_secs()
 }
 
 #[derive(Debug, Deserialize)]
