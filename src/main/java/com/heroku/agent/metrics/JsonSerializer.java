@@ -16,15 +16,13 @@ public final class JsonSerializer {
     // This method is creating JSON by string concatenation.
     //
     // In general, this would be a bad idea and shouldn't be attempted. In the case of the metrics
-    // agent however, we
-    // have a strong case for not using a JSON library here. First, we don't have to write our own
-    // escaping logic:
+    // agent however, we have a strong case for not using a JSON library here. First, we don't have
+    // to write our own escaping logic:
     //
     // - General JSON structure is fixed/static
     // - All JSON object keys are static and fully under our control.
     // - All JSON field values are strictly of type double or long, even though they are dynamic, we
-    // know that we
-    //   never have to escape them:
+    //   know that we never have to escape them:
     //     - https://www.rfc-editor.org/rfc/rfc7159#section-6
     //     - https://docs.oracle.com/javase/7/docs/api/java/lang/Double.html#toString(double)
     //     - https://docs.oracle.com/javase/7/docs/api/java/lang/Long.html#toString(long)
@@ -32,16 +30,13 @@ public final class JsonSerializer {
     // This gives us the big benefit of not having to include a JSON library such as jackson or
     // GSON:
     //
-    // - These libraries add a non-trivial amount of code to the customer's Java process (Jackson:
-    // ~2MiB), affecting
-    //   available memory. Considering that the smallest dyno only provides 512MB of RAM, adding 2MB
-    // is significant.
+    // - These libraries add a non-trivial amount of code to the customer's Java process
+    //   (Jackson: ~2MiB), affecting available memory. Considering that the smallest dyno only
+    //   provides 512MB of RAM, adding 2MB is significant.
     // - Since these libraries handle much more than dumb writing of JSON, the attack surface is
-    // larger, and we'd
-    //   have to deal with security issues from time to time in these libraries.
+    //   larger, and we'd have to deal with security issues from time to time in these libraries.
     // - They would pollute the classpath, requiring us to add additional build configuration that
-    // "shades" these
-    //   libraries into another package to avoid clashes with customer code.
+    //   "shades" these libraries into another package to avoid clashes with customer code.
     StringBuilder stringBuilder = new StringBuilder();
 
     // Start: Root JSON object
