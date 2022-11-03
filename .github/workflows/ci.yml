@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   # Build the agent once and store it as an artifact for subsequent integration tests. This is close to how it works
-  # in production, where the agent is build once and used across all OpenJDK versions.
+  # in production, where the agent is built once and used across all OpenJDK versions.
   build-agent:
     name: "Build agent on OpenJDK 7"
     runs-on: ubuntu-22.04

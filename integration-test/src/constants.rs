@@ -53,7 +53,7 @@ pub const GC_SPECIFIC_COUNTERS: [(&str, JavaGarbageCollector); 12] = [
 
 // There is another count that wasn't emitted by the agent for a long time now:
 // - jvm_gc_collection_seconds_sum.gc_all
-// It is referenced at some places but seems to be unused. We don't test for it but leave
+// It is referenced in some places but seems to be unused. We don't test for it but leave
 // this comment should anyone encounter this metric count name in the future.
 pub const GENERIC_JVM_COUNTERS: [&str; 1] = ["jvm_gc_collection_seconds_count.gc_all"];
 
