@@ -35,7 +35,7 @@ fn main() {
 
     let javac_exit_status = Command::new("javac")
         .current_dir(&simple_host_app_path)
-        .args(&["-d", ".", "App.java"])
+        .args(["-d", ".", "App.java"])
         .spawn()
         .expect("Couldn't spawn javac process to build test application!")
         .wait()
