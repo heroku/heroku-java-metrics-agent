@@ -4,7 +4,7 @@
 ![Maven Central](https://img.shields.io/maven-central/v/com.heroku.agent/heroku-java-metrics-agent)
 [![CI](https://github.com/heroku/heroku-java-metrics-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/heroku/heroku-java-metrics-agent/actions/workflows/ci.yml)
 
-A lightweight (no dependencies, ~22KiB) Java agent that is used to collect metrics for Heroku's [JVM runtime metrics](https://devcenter.heroku.com/articles/language-runtime-metrics-jvm) feature.
+A lightweight (no dependencies, ~22KiB) JVM agent that is used to collect metrics for Heroku's [JVM runtime metrics](https://devcenter.heroku.com/articles/language-runtime-metrics-jvm) feature.
 
 It is automatically added to JVM applications by the language buildpacks for [JVM](https://github.com/heroku/heroku-buildpack-jvm-common), [Java](https://github.com/heroku/heroku-buildpack-java), [Gradle](https://github.com/heroku/heroku-buildpack-gradle), [Scala](https://github.com/heroku/heroku-buildpack-scala) and [Clojure](https://github.com/heroku/heroku-buildpack-clojure).
 Users of these buildpacks don't need to work with this agent directly.
