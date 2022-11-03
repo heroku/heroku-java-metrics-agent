@@ -1,14 +1,13 @@
 package com.heroku.agent.metrics;
 
+import com.heroku.agent.metrics.detector.JBossDetector;
+import com.heroku.agent.metrics.detector.ServerDetector;
 import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
-
-import com.heroku.agent.metrics.detector.JBossDetector;
-import com.heroku.agent.metrics.detector.ServerDetector;
 
 public final class MetricsAgent {
 
@@ -27,24 +26,27 @@ public final class MetricsAgent {
       return;
     }
 
-    // We hand off any further logic to a separate thread to allow the customers' application to continue to start.
-    // In some cases, we wait until certain bits of the customer application have been loaded to not interfere.
-    Thread thread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        for (ServerDetector detector : SERVER_DETECTORS) {
-          Logger.logDebug("await-server", detector.getClass().toString());
-          detector.jvmAgentStartup(instrumentation);
-        }
+    // We hand off any further logic to a separate thread to allow the customers' application to
+    // continue to start.
+    // In some cases, we wait until certain bits of the customer application have been loaded to not
+    // interfere.
+    Thread thread =
+        new Thread(
+            new Runnable() {
+              @Override
+              public void run() {
+                for (ServerDetector detector : SERVER_DETECTORS) {
+                  Logger.logDebug("await-server", detector.getClass().toString());
+                  detector.jvmAgentStartup(instrumentation);
+                }
 
-        Timer timer = new Timer("heroku-java-metrics-agent", true);
-        timer.scheduleAtFixedRate(
-                new TimerTask(new Reporter(metricsEndpointUrl)),
-                Constants.METRICS_REPORTING_INTERVAL_MS,
-                Constants.METRICS_REPORTING_INTERVAL_MS
-        );
-      }
-    });
+                Timer timer = new Timer("heroku-java-metrics-agent", true);
+                timer.scheduleAtFixedRate(
+                    new TimerTask(new Reporter(metricsEndpointUrl)),
+                    Constants.METRICS_REPORTING_INTERVAL_MS,
+                    Constants.METRICS_REPORTING_INTERVAL_MS);
+              }
+            });
 
     thread.setDaemon(true);
     thread.start();
@@ -85,5 +87,5 @@ public final class MetricsAgent {
   }
 
   private static final List<ServerDetector> SERVER_DETECTORS =
-          Collections.singletonList((ServerDetector) new JBossDetector());
+      Collections.singletonList((ServerDetector) new JBossDetector());
 }

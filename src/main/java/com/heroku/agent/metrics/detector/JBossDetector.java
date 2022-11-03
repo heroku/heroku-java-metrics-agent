@@ -10,14 +10,14 @@ public class JBossDetector extends AbstractServerDetector {
   }
 
   /**
-   * Attempts to detect a JBoss modules based application server. Because getting
-   * access to the main arguments is not possible, it returns true in case the system property
-   * {@code jboss.modules.system.pkgs} is set and the {@code org/jboss/modules/Main.class} resource can be found
-   * using the class loader of this class.
+   * Attempts to detect a JBoss modules based application server. Because getting access to the main
+   * arguments is not possible, it returns true in case the system property {@code
+   * jboss.modules.system.pkgs} is set and the {@code org/jboss/modules/Main.class} resource can be
+   * found using the class loader of this class.
    *
-   * If so, it awaits the early initialization of a JBoss modules based application server by polling the system property
-   * {@code java.util.logging.manager} and waiting until the specified class specified by this property has been
-   * loaded by the JVM.
+   * <p>If so, it awaits the early initialization of a JBoss modules based application server by
+   * polling the system property {@code java.util.logging.manager} and waiting until the specified
+   * class specified by this property has been loaded by the JVM.
    */
   @Override
   public void jvmAgentStartup(Instrumentation instrumentation) {
@@ -31,7 +31,8 @@ public class JBossDetector extends AbstractServerDetector {
   }
 
   private boolean earlyDetectForJBossModulesBasedContainer(ClassLoader classLoader) {
-    return hasWildflyProperties() &&
+    return hasWildflyProperties()
+        &&
         // Contained in any JBoss modules app:
         classLoader.getResource("org/jboss/modules/Main.class") != null;
   }
@@ -64,7 +65,8 @@ public class JBossDetector extends AbstractServerDetector {
   private static final int LOGGING_DETECT_TIMEOUT = 5 * 60 * 1000;
   private static final int LOGGING_DETECT_INTERVAL = 200;
 
-  private void awaitServerInitializationForJBossModulesBasedContainer(Instrumentation instrumentation) {
+  private void awaitServerInitializationForJBossModulesBasedContainer(
+      Instrumentation instrumentation) {
     int count = 0;
     while (count * LOGGING_DETECT_INTERVAL < LOGGING_DETECT_TIMEOUT) {
       String loggingManagerClassName = System.getProperty("java.util.logging.manager");
@@ -88,7 +90,10 @@ public class JBossDetector extends AbstractServerDetector {
         throw new RuntimeException(e);
       }
     }
-    throw new IllegalStateException(String.format("Detected JBoss Module loader, but property java.util.logging.manager is not set after %d seconds", LOGGING_DETECT_TIMEOUT / 1000));
+    throw new IllegalStateException(
+        String.format(
+            "Detected JBoss Module loader, but property java.util.logging.manager is not set after"
+                + " %d seconds",
+            LOGGING_DETECT_TIMEOUT / 1000));
   }
-
 }

@@ -1,15 +1,14 @@
 package com.heroku.agent.metrics.detector;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class JBossDetectorTest {
 
@@ -49,15 +48,16 @@ public class JBossDetectorTest {
   @Test
   public void verifyJvmAgentStartup() throws MalformedURLException {
     Instrumentation inst = mock(Instrumentation.class);
-    when(inst.getAllLoadedClasses()).
-        thenReturn(new Class[] {}).
-        thenReturn(new Class[] {}).
-        thenReturn(new Class[] {}).
-        thenReturn(new Class[] {JBossDetectorTest.class});
+    when(inst.getAllLoadedClasses())
+        .thenReturn(new Class[] {})
+        .thenReturn(new Class[] {})
+        .thenReturn(new Class[] {})
+        .thenReturn(new Class[] {JBossDetectorTest.class});
     ClassLoader cl = mock(ClassLoader.class);
     when(cl.getResource("org/jboss/modules/Main.class")).thenReturn(new URL("http", "dummy", ""));
     String prevPkgValue = System.setProperty("jboss.modules.system.pkgs", "blah");
-    String prevLogValue = System.setProperty("java.util.logging.manager", JBossDetectorTest.class.getName());
+    String prevLogValue =
+        System.setProperty("java.util.logging.manager", JBossDetectorTest.class.getName());
 
     try {
       detector.jvmAgentStartup(inst, cl);
