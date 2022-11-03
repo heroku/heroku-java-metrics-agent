@@ -65,10 +65,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.10.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-          <testSource>1.8</testSource>
-          <testTarget>1.8</testTarget>
+          <source>7</source>
+          <target>7</target>
+          <release>7</release>
+          <testSource>17</testSource>
+          <testTarget>17</testTarget>
+          <testRelease>17</testRelease>
         </configuration>
       </plugin>
       <plugin>
