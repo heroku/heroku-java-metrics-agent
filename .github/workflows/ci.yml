@@ -68,6 +68,8 @@ jobs:
         run: rustup update
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2.0.1
+        with:
+          workspaces: "./integration-test"
       - uses: actions/download-artifact@v3
         with:
           name: agent-jar
@@ -83,6 +85,8 @@ jobs:
         run: rustup update
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2.0.1
+        with:
+          workspaces: "./integration-test"
       - name: Clippy
         run: cargo clippy --all-targets --all-features -- --deny warnings
         working-directory: integration-test
