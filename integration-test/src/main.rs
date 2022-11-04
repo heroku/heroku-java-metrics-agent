@@ -11,6 +11,7 @@ use crate::mock_metrics_server::CollectedRequest;
 use clap::Parser;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::convert::identity;
 use std::net::{Ipv4Addr, SocketAddrV4};
 use std::path::PathBuf;
 use std::process::Command;
@@ -26,7 +27,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let collect_duration = Duration::from_secs(30);
+    let collect_duration = Duration::from_secs(31);
     let simple_host_app_path = PathBuf::from("java-src/simple-host-app");
 
     // Compile a simple Java app that serves as the host for the agent tests
@@ -34,7 +35,7 @@ fn main() {
 
     let javac_exit_status = Command::new("javac")
         .current_dir(&simple_host_app_path)
-        .args(&["-d", ".", "App.java"])
+        .args(["-d", ".", "App.java"])
         .spawn()
         .expect("Couldn't spawn javac process to build test application!")
         .wait()
@@ -86,11 +87,22 @@ fn main() {
         collect_duration,
     );
 
-    print!("Verifying request count...");
-    assert_eq!(
-        collected_requests.len() as u64,
-        expected_metrics_report_count(&collect_duration)
-    );
+    print!("Verifying request interval...");
+
+    assert!(collected_requests
+        .windows(2)
+        .map(|window| {
+            match window {
+                [earlier_request, later_request] => later_request
+                    .time
+                    .duration_since(earlier_request.time)
+                    .map(|duration| duration.as_millis() > 4500 && duration.as_millis() < 5500)
+                    .unwrap_or_default(),
+                _ => false,
+            }
+        })
+        .all(identity));
+
     println!("OK");
 
     print!("Verifying requests...");
@@ -158,13 +170,6 @@ fn verify_request(request: &CollectedRequest, expected_gc: JavaGarbageCollector)
             );
         }
     }
-}
-
-fn expected_metrics_report_count(duration: &Duration) -> u64 {
-    let initial_delay = Duration::from_secs(5);
-    let interval = Duration::from_secs(5);
-
-    (*duration - initial_delay).as_secs() / interval.as_secs()
 }
 
 #[derive(Debug, Deserialize)]
