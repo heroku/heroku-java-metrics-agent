@@ -91,9 +91,9 @@
                     <source>7</source>
                     <target>7</target>
                     <release>7</release>
-                    <testSource>17</testSource>
-                    <testTarget>17</testTarget>
-                    <testRelease>17</testRelease>
+                    <testSource>11</testSource>
+                    <testTarget>11</testTarget>
+                    <testRelease>11</testRelease>
                 </configuration>
             </plugin>
             <plugin>
