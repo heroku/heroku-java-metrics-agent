@@ -15,17 +15,23 @@ public final class Logger {
     }
   }
 
-  public static void logResponseError(String at, String message, long status, String response) {
-    System.out.println(
-        "error at=\""
-            + at
-            + "\" component=heroku-java-metrics-agent message=\""
-            + message
-            + "\" status="
-            + status
-            + " response=\""
-            + response
-            + "\"");
+  public static void logReporterResponseError(
+      String at, String message, long status, String response) {
+    // The metrics endpoint returns 401 and 429 from time to time. These errors aren't harmful as
+    // the request will be automatically retried. Customers previously reported log clutter due to these messages. Since
+    // these errors are not actionable for the customer, we now only log at the debug level.
+    if (isDebugEnabled()) {
+      System.out.println(
+          "debug at=\""
+              + at
+              + "\" component=heroku-java-metrics-agent message=\""
+              + message
+              + "\" status="
+              + status
+              + " response=\""
+              + response
+              + "\"");
+    }
   }
 
   private static String formatLogLine(String level, String at, String message) {

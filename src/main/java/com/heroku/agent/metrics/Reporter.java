@@ -42,11 +42,15 @@ public class Reporter {
       // HTTP client error status codes
       if (responseCode >= 400 && responseCode < 500) {
         try {
-          Logger.logResponseError(
-              "send-post",
-              "upstream service error",
-              responseCode,
-              Utils.readAllUtf8(connection.getInputStream()));
+          InputStream errorStream = connection.getErrorStream();
+          String errorStreamAsString = "<response-without-body>";
+
+          if (errorStream != null) {
+            errorStreamAsString = Utils.readAllUtf8(errorStream);
+          }
+
+          Logger.logReporterResponseError(
+              "send-post", "upstream service error", responseCode, errorStreamAsString);
         } catch (IOException e) {
           Logger.logException("send-post", e);
         }
