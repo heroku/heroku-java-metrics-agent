@@ -13,3 +13,7 @@ Users of these buildpacks don't need to work with this agent directly.
 
 Users that use custom buildpacks or Heroku's [container runtime](https://devcenter.heroku.com/articles/container-registry-and-runtime) can set up this agent manually to get JVM runtime metrics in
 Heroku's dashboard. Add `-javaagent:/path/to/heroku-metrics-agent.jar` to your main `java` process (i.e. in your app's [Procfile](https://devcenter.heroku.com/articles/procfile) or your Dockerfile's [`CMD` instruction](https://docs.docker.com/engine/reference/builder/#cmd)). It will automatically configure itself when run on Heroku and does nothing when run elsewhere.
+
+## Debugging
+
+To enable more detailed logging, set the `HEROKU_METRICS_DEBUG` environment variable to `true`.
