@@ -44,10 +44,7 @@ fn main() {
     if javac_exit_status.success() {
         println!("Compilation successful!");
     } else {
-        panic!(
-            "Java compilation exited with exit-status: {}!",
-            javac_exit_status
-        );
+        panic!("Java compilation exited with exit-status: {javac_exit_status}!");
     }
 
     // Spawn the compiled java application with the required GC settings and metrics agent injected
@@ -140,16 +137,14 @@ fn verify_request(request: &CollectedRequest, expected_gc: JavaGarbageCollector)
     for gauge in GENERIC_JVM_GAUGES {
         assert!(
             payload.gauges.contains_key(gauge),
-            "Gauge '{}' is missing!",
-            gauge
+            "Gauge '{gauge}' is missing!"
         );
     }
 
     for counter in GENERIC_JVM_COUNTERS {
         assert!(
             payload.counters.contains_key(counter),
-            "Counter '{}' is missing!",
-            counter
+            "Counter '{counter}' is missing!"
         );
     }
 
@@ -157,16 +152,12 @@ fn verify_request(request: &CollectedRequest, expected_gc: JavaGarbageCollector)
         if gc == expected_gc {
             assert!(
                 payload.counters.contains_key(counter_name),
-                "Counter '{}' should be present when using '{:?}' GC!",
-                counter_name,
-                expected_gc
+                "Counter '{counter_name}' should be present when using '{expected_gc:?}' GC!"
             );
         } else {
             assert!(
                 !payload.counters.contains_key(counter_name),
-                "Counter '{}' should not be present when using '{:?}' GC!",
-                counter_name,
-                expected_gc
+                "Counter '{counter_name}' should not be present when using '{expected_gc:?}' GC!"
             );
         }
     }
