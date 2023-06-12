@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 rouille = "3.6.2"
-serde = { version = "1.0.163", features = ["derive"] }
+serde = { version = "1.0.164", features = ["derive"] }
 serde_json = "1.0.96"
 clap = { version= "4.3.0", features = ["derive"] }
 chrono = "0.4.26"
