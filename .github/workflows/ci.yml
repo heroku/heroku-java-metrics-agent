@@ -67,7 +67,7 @@ jobs:
       - name: Update Rust toolchain
         run: rustup update
       - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.5.0
+        uses: Swatinem/rust-cache@v2.5.1
         with:
           workspaces: "./integration-test"
       - uses: actions/download-artifact@v3
@@ -84,7 +84,7 @@ jobs:
       - name: Update Rust toolchain
         run: rustup update
       - name: Rust Cache
-        uses: Swatinem/rust-cache@v2.5.0
+        uses: Swatinem/rust-cache@v2.5.1
         with:
           workspaces: "./integration-test"
       - name: Clippy
