@@ -32,7 +32,7 @@ jobs:
     needs: build-agent
     strategy:
       matrix:
-        # These are all currently supported OpenJDK versions on Heroku. Update this to reflect supported versions:
+        # These are all currently available OpenJDK versions on Heroku. Update this to reflect available versions:
         # https://devcenter.heroku.com/articles/java-support#supported-java-versions
         java-version:
           - 7
@@ -45,6 +45,8 @@ jobs:
           - 17
           - 18
           - 19
+          - 20
+          - 21
         gc:
           - parallel
           - g1
