@@ -16,7 +16,7 @@ jobs:
     name: "Build and verify"
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
@@ -61,7 +61,7 @@ jobs:
           - java-version: 13
             gc: cms
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
           distribution: zulu
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Update Rust toolchain
         run: rustup update
       - name: Rust Cache
