@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+
+## [4.0.2] - 2023-10-10
+
 ### Changed
 
 - Update release process. ([#148](https://github.com/heroku/heroku-java-metrics-agent/pull/148))
 
-[unreleased]: https://github.com/heroku/heroku-java-metrics-agent/compare/v4.0.1...HEAD
+[unreleased]: https://github.com/heroku/heroku-java-metrics-agent/compare/v4.0.2...HEAD
+[4.0.2]: https://github.com/heroku/heroku-java-metrics-agent/compare/v4.0.1...v4.0.2
