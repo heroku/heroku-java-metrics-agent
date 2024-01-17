@@ -5,7 +5,7 @@ use std::net::SocketAddrV4;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant, SystemTime};
 
-pub fn collect_requests(address: SocketAddrV4, duration: Duration) -> Vec<CollectedRequest> {
+pub(crate) fn collect_requests(address: SocketAddrV4, duration: Duration) -> Vec<CollectedRequest> {
     let collected_requests = Arc::new(Mutex::new(vec![]));
     let return_requests = collected_requests.clone();
 
@@ -52,8 +52,8 @@ pub fn collect_requests(address: SocketAddrV4, duration: Duration) -> Vec<Collec
 }
 
 #[derive(Debug)]
-pub struct CollectedRequest {
-    pub time: SystemTime,
-    pub headers: HashMap<String, String>,
-    pub body: Option<String>,
+pub(crate) struct CollectedRequest {
+    pub(crate) time: SystemTime,
+    pub(crate) headers: HashMap<String, String>,
+    pub(crate) body: Option<String>,
 }

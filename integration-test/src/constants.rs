@@ -1,6 +1,6 @@
 use crate::JavaGarbageCollector;
 
-pub const GC_SPECIFIC_COUNTERS: [(&str, JavaGarbageCollector); 12] = [
+pub(crate) const GC_SPECIFIC_COUNTERS: [(&str, JavaGarbageCollector); 12] = [
     (
         "jvm_gc_collection_seconds_count.gc_PS_Scavenge",
         JavaGarbageCollector::Parallel,
@@ -55,9 +55,9 @@ pub const GC_SPECIFIC_COUNTERS: [(&str, JavaGarbageCollector); 12] = [
 // - jvm_gc_collection_seconds_sum.gc_all
 // It is referenced in some places but seems to be unused. We don't test for it but leave
 // this comment should anyone encounter this metric count name in the future.
-pub const GENERIC_JVM_COUNTERS: [&str; 1] = ["jvm_gc_collection_seconds_count.gc_all"];
+pub(crate) const GENERIC_JVM_COUNTERS: [&str; 1] = ["jvm_gc_collection_seconds_count.gc_all"];
 
-pub const GENERIC_JVM_GAUGES: [&str; 6] = [
+pub(crate) const GENERIC_JVM_GAUGES: [&str; 6] = [
     "jvm_memory_bytes_used.area_heap",
     "jvm_memory_bytes_used.area_nonheap",
     "jvm_buffer_pool_bytes_used.name_direct",
