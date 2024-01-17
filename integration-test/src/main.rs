@@ -1,6 +1,3 @@
-#![warn(clippy::pedantic)]
-#![warn(unused_crate_dependencies)]
-
 mod constants;
 mod gc;
 mod mock_metrics_server;

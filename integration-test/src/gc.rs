@@ -1,7 +1,7 @@
 use clap::builder::PossibleValue;
 
 #[derive(Clone, Copy, Eq, PartialEq, Debug)]
-pub enum JavaGarbageCollector {
+pub(crate) enum JavaGarbageCollector {
     ConcurrentMarkSweep,
     Parallel,
     G1,
