@@ -47,6 +47,7 @@ jobs:
           - 19
           - 20
           - 21
+          - 22
         gc:
           - parallel
           - g1
