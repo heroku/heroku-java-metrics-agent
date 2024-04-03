@@ -90,8 +90,9 @@ fn main() {
                 [earlier_request, later_request] => later_request
                     .time
                     .duration_since(earlier_request.time)
-                    .map(|duration| duration.as_millis() > 4500 && duration.as_millis() < 5500)
-                    .unwrap_or_default(),
+                    .is_ok_and(|duration| {
+                        duration.as_millis() > 4500 && duration.as_millis() < 5500
+                    }),
                 _ => false,
             }
         })
