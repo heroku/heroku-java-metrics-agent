@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [4.0.3] - 2024-07-17
 
+### Changed
+
+- Update release process.
 
 ## [4.0.2] - 2023-10-10
 
