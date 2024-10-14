@@ -65,7 +65,7 @@ fn main() {
         ])
         .env(
             "HEROKU_METRICS_URL",
-            &format!("http://localhost:{}", args.port),
+            format!("http://localhost:{}", args.port),
         )
         .spawn()
         .expect("Couldn't spawn java process!");
