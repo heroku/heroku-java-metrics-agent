@@ -109,6 +109,10 @@ fn main() {
     java_child_process
         .kill()
         .expect("Couldn't kill java process!");
+
+    java_child_process
+        .wait()
+        .expect("Couldn't wait for java process completion!");
 }
 
 fn verify_request(request: &CollectedRequest, expected_gc: JavaGarbageCollector) {
