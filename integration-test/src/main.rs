@@ -8,7 +8,6 @@ use crate::mock_metrics_server::CollectedRequest;
 use clap::Parser;
 use serde::Deserialize;
 use std::collections::HashMap;
-use std::convert::identity;
 use std::net::{Ipv4Addr, SocketAddrV4};
 use std::path::PathBuf;
 use std::process::Command;
@@ -83,20 +82,15 @@ fn main() {
 
     print!("Verifying request interval...");
 
-    assert!(collected_requests
-        .windows(2)
-        .map(|window| {
-            match window {
-                [earlier_request, later_request] => later_request
-                    .time
-                    .duration_since(earlier_request.time)
-                    .is_ok_and(|duration| {
-                        duration.as_millis() > 4500 && duration.as_millis() < 5500
-                    }),
-                _ => false,
-            }
-        })
-        .all(identity));
+    assert!(collected_requests.windows(2).all(|window| {
+        match window {
+            [earlier_request, later_request] => later_request
+                .time
+                .duration_since(earlier_request.time)
+                .is_ok_and(|duration| duration.as_millis() > 4500 && duration.as_millis() < 5500),
+            _ => false,
+        }
+    }));
 
     println!("OK");
 
