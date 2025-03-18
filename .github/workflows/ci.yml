@@ -77,7 +77,7 @@ jobs:
         with:
           name: agent-jar
       - name: Run integration tests
-        run: cargo run -- "../heroku-java-metrics-agent.jar" "${{ matrix.gc }}" "9876"
+        run: cargo run --locked -- "../heroku-java-metrics-agent.jar" "${{ matrix.gc }}" "9876"
         working-directory: integration-test
   rust-lint:
     runs-on: ubuntu-24.04
@@ -91,7 +91,7 @@ jobs:
         with:
           workspaces: "./integration-test"
       - name: Clippy
-        run: cargo clippy --all-targets --all-features -- --deny warnings
+        run: cargo clippy --all-targets --all-features --locked -- --deny warnings
         working-directory: integration-test
       - name: rustfmt
         run: cargo fmt -- --check
