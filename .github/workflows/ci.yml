@@ -73,7 +73,7 @@ jobs:
         uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
         with:
           workspaces: "./integration-test"
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: agent-jar
       - name: Run integration tests
