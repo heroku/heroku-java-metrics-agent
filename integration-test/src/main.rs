@@ -70,10 +70,7 @@ fn main() {
         .expect("Couldn't spawn java process!");
 
     // Start a fake metrics server that will just collect the incoming requests for later validation
-    println!(
-        "Starting fake metrics server and collecting requests for {:?}",
-        &collect_duration
-    );
+    println!("Starting fake metrics server and collecting requests for {collect_duration:?}");
 
     let collected_requests = mock_metrics_server::collect_requests(
         SocketAddrV4::new(Ipv4Addr::LOCALHOST, args.port),
