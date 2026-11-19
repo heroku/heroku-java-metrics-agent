@@ -35,7 +35,6 @@ jobs:
         # These are all currently available OpenJDK versions on Heroku. Update this to reflect available versions:
         # https://devcenter.heroku.com/articles/java-support#supported-java-versions
         java-version:
-          - 7
           - 8
           - 11
           - 13
@@ -48,13 +47,12 @@ jobs:
           - 20
           - 21
           - 22
+          - 25
         gc:
           - parallel
           - g1
         # CMS GC is only supported in OpenJDK <= 13
         include:
-          - java-version: 7
-            gc: cms
           - java-version: 8
             gc: cms
           - java-version: 11
